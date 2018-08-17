@@ -2,16 +2,16 @@
 
 This is my emacs configuration file, the current feature offerings included are.
 
-### Auto .org mode recognition
+#### Auto .org file mode recognition
 
-### Agenda mode enabled
+#### Agenda mode enabled
 
-### Auto-update agenda view on a timer
+#### Auto-update agenda view on a timer
 
-### Capture Templates
+#### Capture Templates
 
-#### Note:
+##### Note:
 
-#### Journal:
+##### Journal:
 
-#### Meeting:
+##### Meeting:
