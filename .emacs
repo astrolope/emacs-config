@@ -27,11 +27,13 @@
 
 ;; Custom Caputre Templates
 (setq org-capture-templates
- '(("t" "Todo" entry (file+headline "~/org/inbox.org" "Tasks")
+      '(
+        ("m" "Meeting" entry (file+headline "~/org/inbox.org" "Meetings")
+        "** WITH:  %?\n %U\n  %i\n *** Agenda \n *** Questions \n  %a")
+        ("t" "Todo" entry (file+headline "~/org/inbox.org" "Tasks")
         "* TODO %?\n  %i\n  %a")
-   ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
-    "* %?\nEntered on %U\n  %i\n  %a")))
-
+        ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
+         "* %?\nEntered on %U\n  %i\n  %a")))
 
 ;; Update Agenda Buffer every X seconds.
 
