@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     markdown
      javascript
      html
      ;; ----------------------------------------------------------------
@@ -57,7 +58,11 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(
+     magit
+     ob-http
+     org-brain
+   )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -306,91 +311,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   )
 
 (defun dotspacemacs/user-config ()
-  "Configuration function for user code.
-This function is called at the very end of Spacemacs initialization after
-layers configuration.
-This is the place where most of your configurations should be done. Unless it is
-explicitly specified that a variable should be set before a package is loaded,
-you should place your code here."
-
-  ;; Enabled Agenda Mode
-  (define-key global-map "\C-cl" 'org-store-link)
-  (define-key global-map "\C-ca" 'org-agenda)
-  (setq org-log-done t)
-
-
-  (setq locale-coding-system 'utf-8)
-  (set-terminal-coding-system 'utf-8)
-  (set-keyboard-coding-system 'utf-8)
-  (set-selection-coding-system 'utf-8)
-  (prefer-coding-system 'utf-8)
-  (when (display-graphic-p)
-    (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
-
-
-  ;; Enable Caputre Templates
-
-  (define-key global-map "\C-cc" 'org-capture)
-  ;; Custom Caputre Templates
-  (setq org-capture-templates
-        '(
-          ("p" "Project" entry (file+headline "~/org/inbox.org" "Projects")
-           "** Project: %?\n %U\n  %i\n*** Requirements  \n*** Questions \n*** Tasks  %a")
-          ("m" "Meeting" entry (file+headline "~/org/inbox.org" "Meetings")
-           "** WITH: %?\n%U\n  %i\n*** Agenda\n  * \n*** Questions \n  *  %a")
-          ("t" "Todo" entry (file+headline "~/org/inbox.org" "Tasks")
-           "* TODO %?\n  %i\n  %a")
-          ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
-           "* %?\nEntered on %U\n  %i\n  %a")))
-
-
-  ;; Update Agenda Buffer every X seconds.
-
-  (defun renewOrgBuffer ()
-    (interactive)
-    (dolist (buffer (buffer-list))
-      (with-current-buffer buffer
-        (when (derived-mode-p 'org-agenda-mode)
-          (org-agenda-maybe-redo))))
-    )
-
-  (run-with-idle-timer 3 1000 #'renewOrgBuffer)
-
-
-  (setq org-todo-keywords '(
-                            (sequence "☛ TODO(t)" "|" "✔ DONE(d)")
-                            (sequence "⚑ WAITING(w)" "|")
-                            (sequence "🐛 BUG(b)" "|")
-                            (sequence "✉️  MAILED(m)" "|")
-                            (sequence "❓ QUESTION(q)" "|")
-                            (sequence "|" "✘ CANCELED(c)")
-                            ))
-                      
-
-         
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '(
-       (awk . t)
-       (calc .t)
-       (C . t)
-       (emacs-lisp . t)
-       (haskell . t)
-       (gnuplot . t)
-       (latex . t)
-       (ledger . t)
-       (js . t)
-       (haskell . t)
-       (perl . t)
-       (python . t)
-       ;; (gnuplot . t)
-       ;; org-babel does not currently support php.  That is really sad.
-       ;;(php . t)
-       (R . t)
-       (scheme . t)
-       (sql . t)
-       ;;(sqlite . t)
-       ))
+  (load-file "~/Emacs/init.el")
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -400,14 +321,15 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files (quote ("~/Org/inbox.org" "~/org/projects/todo.org")))
+ '(org-agenda-files
+   (quote
+    ("~/org/brain/Agenda.org" "~/org/brain/Recurring.org" "~/org/brain/Bugs.org" "~/org/brain/API.org" "~/Org/inbox.org" "~/org/projects/todo.org")))
  '(package-selected-packages
    (quote
-    (ledger-mode web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode htmlize org-brain ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (mmm-mode markdown-toc markdown-mode gh-md magit-popup git-commit ghub treepy graphql with-editor ob-http magit ledger-mode web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode htmlize org-brain ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
